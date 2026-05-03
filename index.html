@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europass CV – Marvin Papina</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f2f5;color:#1a1a1a}
+
+.toolbar{background:#fff;border-bottom:1px solid #ddd;padding:10px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+.toolbar-tag{background:#003399;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:.5px}
+.toolbar h1{font-size:14px;font-weight:500;color:#333;flex:1}
+.btn-print{background:#003399;color:#fff;border:none;padding:8px 20px;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-print:hover{background:#0044cc}
+.btn-edit{background:#fff;color:#003399;border:1px solid #003399;padding:8px 14px;border-radius:5px;font-size:13px;cursor:pointer}
+.btn-edit:hover{background:#e8efff}
+
+.cv-wrap{max-width:820px;margin:24px auto 40px;background:#fff;border:1px solid #ccc;box-shadow:0 2px 16px rgba(0,0,0,.1)}
+
+/* Header */
+.cv-header{background:#003399;padding:22px 26px 18px;display:flex;gap:18px;align-items:flex-start}
+.photo-area{width:92px;height:114px;flex-shrink:0;position:relative;overflow:hidden;border-radius:2px;border:2px solid rgba(255,255,255,.4)}
+.photo-area img{width:100%;height:100%;object-fit:cover}
+.photo-placeholder{width:92px;height:114px;border:2px dashed rgba(255,255,255,.45);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;background:rgba(255,255,255,.07);border-radius:2px}
+.photo-placeholder span{font-size:10px;color:rgba(255,255,255,.55);text-align:center;line-height:1.4;padding:4px}
+.photo-input{display:none}
+
+.header-fields{flex:1}
+.ep-wlabel{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
+.hfield{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.3);color:#fff;font-size:13px;font-family:Arial,sans-serif;padding:3px 0;width:100%;outline:none}
+.hfield::placeholder{color:rgba(255,255,255,.3)}
+.hfield:focus{border-bottom-color:rgba(255,255,255,.85)}
+.hfield-name{font-size:24px;font-weight:700;margin-bottom:8px;border-bottom:none}
+.header-row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px}
+
+/* Body */
+.cv-body{padding:0 26px 26px}
+.cv-section{margin-top:20px}
+.sec-title{background:#003399;color:#fff;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:5px 9px;margin-bottom:12px}
+
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px}
+.info-field{display:flex;flex-direction:column;margin-bottom:8px}
+.info-field label{font-size:9px;color:#003399;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.ep-input{border:none;border-bottom:1px solid #aab8d8;padding:3px 0;font-size:12px;font-family:Arial,sans-serif;color:#1a1a1a;outline:none;background:transparent;width:100%}
+.ep-input::placeholder{color:#bbb;font-style:italic}
+.ep-input:focus{border-bottom-color:#003399}
+.ep-textarea{border:1px solid #aab8d8;padding:5px 7px;font-size:12px;font-family:Arial,sans-serif;color:#1a1a1a;outline:none;background:transparent;width:100%;resize:vertical;min-height:52px;border-radius:2px;line-height:1.6}
+.ep-textarea:focus{border-color:#003399}
+
+/* Entries */
+.entry{display:grid;grid-template-columns:115px 1fr;gap:0 14px;border-bottom:1px dashed #dde3f0;padding-bottom:12px;margin-bottom:12px}
+.entry-dates-col label{font-size:9px;color:#003399;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;display:block}
+.date-val{font-size:12px;color:#444;font-family:Arial;font-weight:600;padding:2px 0;display:block}
+.entry-main>label{font-size:9px;color:#003399;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:6px;display:block;margin-bottom:2px}
+.entry-main>label:first-of-type{margin-top:0}
+.field-val{font-size:12px;color:#1a1a1a;padding:2px 0;display:block;line-height:1.5}
+.field-val-bold{font-weight:700;font-size:13px;color:#1a1a1a;display:block;padding:1px 0}
+
+/* Editable mode */
+body.edit-mode .date-val,
+body.edit-mode .field-val,
+body.edit-mode .field-val-bold{display:none}
+body.edit-mode .ep-input-inline,
+body.edit-mode .ep-textarea-inline{display:block}
+.ep-input-inline,.ep-textarea-inline{display:none;border:none;border-bottom:1px solid #aab8d8;padding:3px 0;font-size:12px;font-family:Arial,sans-serif;color:#1a1a1a;outline:none;background:transparent;width:100%}
+.ep-input-inline:focus,.ep-textarea-inline:focus{border-bottom-color:#003399}
+.ep-textarea-inline{border:1px solid #aab8d8;padding:5px 7px;border-radius:2px;resize:vertical;min-height:52px;line-height:1.6}
+
+/* Language table */
+.lang-table{width:100%;border-collapse:collapse;font-size:11px}
+.lang-table th{background:#003399;color:#fff;padding:5px 7px;font-size:9px;text-align:center;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.lang-table th.left{text-align:left}
+.lang-table td{border:1px solid #ccd3e8;padding:5px 7px;color:#1a1a1a;text-align:center;font-size:12px}
+.lang-table td.left{text-align:left;font-weight:600}
+.lang-table td.mother{color:#003399;font-weight:700}
+.lang-note{font-size:9px;color:#888;margin-top:5px;font-style:italic}
+
+/* Skills & bullets */
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.skill-cat label{font-size:9px;color:#003399;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;display:block}
+.skill-item{font-size:12px;color:#1a1a1a;padding:2px 0 2px 14px;position:relative;line-height:1.5}
+.skill-item::before{content:"•";position:absolute;left:2px;color:#003399;font-size:14px;line-height:1.2}
+
+/* GDPR footer */
+.gdpr{margin-top:18px;border-top:1px solid #ccd3e8;padding-top:10px;font-size:9px;color:#888;text-align:center;line-height:1.6;font-style:italic}
+
+/* ── PRINT ── */
+@media print{
+  @page{size:A4;margin:11mm 13mm}
+  body{background:#fff}
+  .toolbar{display:none!important}
+  .cv-wrap{margin:0;border:none;box-shadow:none;max-width:100%}
+  .ep-input,.ep-textarea,.ep-input-inline,.ep-textarea-inline{border-bottom:none!important;border:none!important}
+  .cv-header,.sec-title,.lang-table th{-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact}
+  .cv-section{page-break-inside:avoid}
+  .entry{page-break-inside:avoid}
+  .photo-placeholder{display:none}
+  body.edit-mode .date-val,
+  body.edit-mode .field-val,
+  body.edit-mode .field-val-bold{display:block}
+  body.edit-mode .ep-input-inline,
+  body.edit-mode .ep-textarea-inline{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="toolbar-tag">EUROPASS</span>
+  <h1>Curriculum Vitae &mdash; Marvin Papina</h1>
+  <button class="btn-edit" onclick="toggleEdit()" id="editBtn">&#9998;&nbsp; Edit fields</button>
+  <button class="btn-print" onclick="window.print()">&#128438;&nbsp; Print / Save PDF</button>
+</div>
+
+<div class="cv-wrap" id="cv">
+
+  <!-- HEADER -->
+  <div class="cv-header">
+    <div id="photoWrap">
+      <!-- Photo from original CV can be added by clicking placeholder -->
+      <div class="photo-placeholder" onclick="document.getElementById('photoInput').click()" title="Click to upload photo" id="photoPH">
+        <span>Click to<br>add photo</span>
+      </div>
+      <div class="photo-area" id="photoArea" style="display:none">
+        <img id="photoImg" src="" alt="Marvin Papina">
+      </div>
+      <input type="file" id="photoInput" class="photo-input" accept="image/*">
+    </div>
+
+    <div class="header-fields">
+      <div class="ep-wlabel">First name(s) / Surname(s)</div>
+      <div class="hfield-name" style="font-size:24px;font-weight:700;color:#fff;padding:3px 0 8px">Marvin Papina</div>
+      <div class="ep-wlabel">Job applied for / Position</div>
+      <div style="color:#cce0ff;font-size:13px;padding:3px 0 8px;border-bottom:1px solid rgba(255,255,255,.2)">Fabricator / Welder</div>
+      <div class="header-row2">
+        <div>
+          <div class="ep-wlabel">Date of birth</div>
+          <div style="color:#fff;font-size:12px;padding:3px 0">&nbsp;</div>
+        </div>
+        <div>
+          <div class="ep-wlabel">Nationality</div>
+          <div style="color:#fff;font-size:12px;padding:3px 0">Filipino</div>
+        </div>
+        <div>
+          <div class="ep-wlabel">Sex</div>
+          <div style="color:#fff;font-size:12px;padding:3px 0">Male</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cv-body">
+
+    <!-- PERSONAL INFORMATION -->
+    <div class="cv-section">
+      <div class="sec-title">Personal Information</div>
+      <div class="info-grid">
+        <div class="info-field" style="grid-column:1/-1">
+          <label>Address</label>
+          <span class="field-val">Al Meena Street, Abu Dhabi, U.A.E.</span>
+          <input class="ep-input-inline" value="Al Meena Street, Abu Dhabi, U.A.E.">
+        </div>
+        <div class="info-field">
+          <label>Telephone</label>
+          <span class="field-val">+971 50 639 0675</span>
+          <input class="ep-input-inline" value="+971 50 639 0675">
+        </div>
+        <div class="info-field">
+          <label>Mobile</label>
+          <span class="field-val">+971 52 715 9878</span>
+          <input class="ep-input-inline" value="+971 52 715 9878">
+        </div>
+        <div class="info-field">
+          <label>Email</label>
+          <span class="field-val">Nhoypops172@gmail.com</span>
+          <input class="ep-input-inline" value="Nhoypops172@gmail.com">
+        </div>
+        <div class="info-field">
+          <label>Driving Licence</label>
+          <span class="field-val">&nbsp;</span>
+          <input class="ep-input-inline" placeholder="e.g. Category B">
+        </div>
+      </div>
+    </div>
+
+    <!-- WORK EXPERIENCE -->
+    <div class="cv-section">
+      <div class="sec-title">Work Experience</div>
+
+      <div class="entry">
+        <div class="entry-dates-col">
+          <label>Dates</label>
+          <span class="date-val">2009 – Present</span>
+          <input class="ep-input-inline" value="2009 – Present">
+        </div>
+        <div class="entry-main">
+          <label>Job title / Occupation</label>
+          <span class="field-val-bold">Fabricator / Welder</span>
+          <input class="ep-input-inline" style="font-weight:700;font-size:13px" value="Fabricator / Welder">
+          <label>Employer &amp; Location</label>
+          <span class="field-val">Creation Kitchen Equipment &nbsp;|&nbsp; Mw4, Musafah, Abu Dhabi, U.A.E.</span>
+          <input class="ep-input-inline" value="Creation Kitchen Equipment | Mw4, Musafah, Abu Dhabi, U.A.E.">
+          <label>Main activities &amp; responsibilities</label>
+          <span class="field-val">Fabrication of commercial kitchen equipment in stainless steel; installation, repair and maintenance of kitchen units; manufacturing of hoods, tables, wall cabinets and base cabinets; interpreting technical drawings and schematics; quality inspection and test cuts of finished products.</span>
+          <textarea class="ep-textarea-inline" rows="4">Fabrication of commercial kitchen equipment in stainless steel; installation, repair and maintenance of kitchen units; manufacturing of hoods, tables, wall cabinets and base cabinets; interpreting technical drawings and schematics; quality inspection and test cuts of finished products.</textarea>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-dates-col">
+          <label>Dates</label>
+          <span class="date-val">2006 – 2008</span>
+          <input class="ep-input-inline" value="2006 – 2008">
+        </div>
+        <div class="entry-main">
+          <label>Job title / Occupation</label>
+          <span class="field-val-bold">Fabricator / Welder</span>
+          <input class="ep-input-inline" style="font-weight:700;font-size:13px" value="Fabricator / Welder">
+          <label>Employer &amp; Location</label>
+          <span class="field-val">Blue Frame Works &nbsp;|&nbsp; Antipolo City, Philippines</span>
+          <input class="ep-input-inline" value="Blue Frame Works | Antipolo City, Philippines">
+          <label>Main activities &amp; responsibilities</label>
+          <span class="field-val">Steel fabrication and welding works; use of power and hand tools; reading and interpreting fabrication drawings.</span>
+          <textarea class="ep-textarea-inline" rows="2">Steel fabrication and welding works; use of power and hand tools; reading and interpreting fabrication drawings.</textarea>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-dates-col">
+          <label>Dates</label>
+          <span class="date-val">2004 – 2005</span>
+          <input class="ep-input-inline" value="2004 – 2005">
+        </div>
+        <div class="entry-main">
+          <label>Job title / Occupation</label>
+          <span class="field-val-bold">Maintenance Welder</span>
+          <input class="ep-input-inline" style="font-weight:700;font-size:13px" value="Maintenance Welder">
+          <label>Employer &amp; Location</label>
+          <span class="field-val">Erna Enterprises (Fishing Boat) &nbsp;|&nbsp; Balatan, Camarines Sur, Philippines</span>
+          <input class="ep-input-inline" value="Erna Enterprises (Fishing Boat) | Balatan, Camarines Sur, Philippines">
+          <label>Main activities &amp; responsibilities</label>
+          <span class="field-val">Maintenance welding and repair works on fishing vessel equipment and structures.</span>
+          <textarea class="ep-textarea-inline" rows="2">Maintenance welding and repair works on fishing vessel equipment and structures.</textarea>
+        </div>
+      </div>
+
+      <div class="entry" style="border-bottom:none;margin-bottom:0;padding-bottom:0">
+        <div class="entry-dates-col">
+          <label>Dates</label>
+          <span class="date-val">2002 – 2003</span>
+          <input class="ep-input-inline" value="2002 – 2003">
+        </div>
+        <div class="entry-main">
+          <label>Job title / Occupation</label>
+          <span class="field-val-bold">Bagger</span>
+          <input class="ep-input-inline" style="font-weight:700;font-size:13px" value="Bagger">
+          <label>Employer &amp; Location</label>
+          <span class="field-val">Emilus Supermarket &nbsp;|&nbsp; Salinas, Rosario, Cavite, Philippines</span>
+          <input class="ep-input-inline" value="Emilus Supermarket | Salinas, Rosario, Cavite, Philippines">
+        </div>
+      </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="cv-section">
+      <div class="sec-title">Education and Training</div>
+
+      <div class="entry">
+        <div class="entry-dates-col">
+          <label>Dates</label>
+          <span class="date-val">1997 – 2001</span>
+          <input class="ep-input-inline" value="1997 – 2001">
+        </div>
+        <div class="entry-main">
+          <label>Qualification</label>
+          <span class="field-val-bold">High School Graduate</span>
+          <input class="ep-input-inline" style="font-weight:700;font-size:13px" value="High School Graduate">
+          <label>Institution &amp; Location</label>
+          <span class="field-val">Batobalani National High School &nbsp;|&nbsp; Philippines</span>
+          <input class="ep-input-inline" value="Batobalani National High School | Philippines">
+          <label>Notes</label>
+          <span class="field-val">1st year to 4th year high school</span>
+          <input class="ep-input-inline" value="1st year to 4th year high school">
+        </div>
+      </div>
+
+      <div class="entry" style="border-bottom:none;margin-bottom:0;padding-bottom:0">
+        <div class="entry-dates-col">
+          <label>Dates</label>
+          <span class="date-val">1991 – 1996</span>
+          <input class="ep-input-inline" value="1991 – 1996">
+        </div>
+        <div class="entry-main">
+          <label>Qualification</label>
+          <span class="field-val-bold">Elementary Graduate</span>
+          <input class="ep-input-inline" style="font-weight:700;font-size:13px" value="Elementary Graduate">
+          <label>Institution &amp; Location</label>
+          <span class="field-val">Batobalani Elementary School &nbsp;|&nbsp; Philippines</span>
+          <input class="ep-input-inline" value="Batobalani Elementary School | Philippines">
+          <label>Notes</label>
+          <span class="field-val">Grade 1 to Grade 6</span>
+          <input class="ep-input-inline" value="Grade 1 to Grade 6">
+        </div>
+      </div>
+    </div>
+
+    <!-- LANGUAGE SKILLS -->
+    <div class="cv-section">
+      <div class="sec-title">Language Skills</div>
+      <table class="lang-table">
+        <thead>
+          <tr>
+            <th class="left" rowspan="2" style="width:130px">Language</th>
+            <th rowspan="2" style="width:75px">Mother<br>tongue</th>
+            <th colspan="2">Understanding</th>
+            <th colspan="2">Speaking</th>
+            <th rowspan="2">Writing</th>
+          </tr>
+          <tr>
+            <th>Listening</th>
+            <th>Reading</th>
+            <th>Interaction</th>
+            <th>Production</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left">Filipino (Tagalog)</td>
+            <td class="mother">&#10003; Yes</td>
+            <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+          </tr>
+          <tr>
+            <td class="left">English</td>
+            <td></td>
+            <td>B1</td><td>B1</td><td>B1</td><td>B1</td><td>B1</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="lang-note">Levels: A1/A2 = Basic &nbsp;|&nbsp; B1/B2 = Independent &nbsp;|&nbsp; C1/C2 = Proficient &nbsp;&mdash;&nbsp; Common European Framework of Reference for Languages (CEFR)</p>
+    </div>
+
+    <!-- DIGITAL SKILLS -->
+    <div class="cv-section">
+      <div class="sec-title">Digital Skills</div>
+      <div class="info-field">
+        <label>Tools &amp; Software</label>
+        <span class="field-val">Basic computer use; ability to read digital fabrication drawings and technical plans.</span>
+        <textarea class="ep-textarea-inline" rows="2">Basic computer use; ability to read digital fabrication drawings and technical plans.</textarea>
+      </div>
+    </div>
+
+    <!-- PERSONAL SKILLS -->
+    <div class="cv-section">
+      <div class="sec-title">Personal and Other Skills</div>
+      <div class="skills-grid">
+        <div class="skill-cat">
+          <label>Technical / Job-specific skills</label>
+          <div class="skill-item">MIG/MAG, TIG (GTAW) and oxyacetylene welding</div>
+          <div class="skill-item">Stainless steel fabrication and forming</div>
+          <div class="skill-item">Reading and interpreting fabrication drawings and plans</div>
+          <div class="skill-item">Calculation of exact dimensions for welding</div>
+          <div class="skill-item">Inspection and test cuts of finished products</div>
+          <div class="skill-item">Semi-automatic spot-welding equipment operation</div>
+          <div class="skill-item">Installation, repair and maintenance of kitchen equipment</div>
+        </div>
+        <div class="skill-cat">
+          <label>Organisational / Other skills</label>
+          <div class="skill-item">Over 20 years of hands-on welding and fabrication experience</div>
+          <div class="skill-item">Effective use of power and hand tools</div>
+          <div class="skill-item">Knowledge of workshop safety systems and procedures</div>
+          <div class="skill-item">Ability to work independently or as part of a team</div>
+          <div class="skill-item">Experienced in manufacturing and workshop environments</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADDITIONAL INFORMATION -->
+    <div class="cv-section">
+      <div class="sec-title">Additional Information</div>
+      <div class="info-field" style="margin-bottom:10px">
+        <label>Professional Summary</label>
+        <span class="field-val">Over 20 years of dedicated experience in welding and fabrication. Suitably qualified fabrication welder with extensive knowledge of safety systems and operating welding equipment in workshops and manufacturing facilities. Well-versed in welding to schematics and architectural drawings. Experienced in making inspections and test cuts of finished products. Knowledgeable with oxyacetylene and tungsten inert gas (TIG) welding equipment.</span>
+        <textarea class="ep-textarea-inline" rows="5">Over 20 years of dedicated experience in welding and fabrication. Suitably qualified fabrication welder with extensive knowledge of safety systems and operating welding equipment in workshops and manufacturing facilities. Well-versed in welding to schematics and architectural drawings. Experienced in making inspections and test cuts of finished products. Knowledgeable with oxyacetylene and tungsten inert gas (TIG) welding equipment.</textarea>
+      </div>
+      <div class="info-field">
+        <label>References</label>
+        <span class="field-val">Available on request.</span>
+        <input class="ep-input-inline" value="Available on request.">
+      </div>
+    </div>
+
+    <div class="gdpr">
+      I hereby consent to my personal data being processed for the purposes of the recruitment process in accordance with the General Data Protection Regulation (GDPR) (EU) 2016/679.
+    </div>
+
+  </div>
+</div>
+
+<script>
+let editMode = false;
+function toggleEdit(){
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  document.getElementById('editBtn').innerHTML = editMode ? '&#10003;&nbsp; Done editing' : '&#9998;&nbsp; Edit fields';
+  if(!editMode){
+    // sync edited values back to display spans
+    document.querySelectorAll('.ep-input-inline').forEach(inp => {
+      const span = inp.previousElementSibling;
+      if(span && (span.classList.contains('field-val') || span.classList.contains('field-val-bold') || span.classList.contains('date-val'))){
+        span.textContent = inp.value;
+      }
+    });
+    document.querySelectorAll('.ep-textarea-inline').forEach(ta => {
+      const span = ta.previousElementSibling;
+      if(span && span.classList.contains('field-val')){
+        span.textContent = ta.value;
+      }
+    });
+  }
+}
+
+document.getElementById('photoInput').addEventListener('change', function(){
+  const file = this.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('photoImg').src = e.target.result;
+    document.getElementById('photoPH').style.display = 'none';
+    document.getElementById('photoArea').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+});
+</script>
+</body>
+</html>
